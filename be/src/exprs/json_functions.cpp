@@ -371,12 +371,8 @@ StatusOr<ColumnPtr> JsonFunctions::json_pretty(FunctionContext* context, const C
             result.append_null();
         } else {
             JsonValue* json = viewer.value(row);
-            try {
-                std::string pretty_json = json->to_vslice().toJson(&options);
-                result.append(pretty_json);
-            } catch (const std::exception& e) {
-                result.append_null();
-            }
+            std::string pretty_json = json->to_vslice().toJson(&options);
+            result.append(pretty_json);
         }
     }
     return result.build(ColumnHelper::is_all_const(columns));

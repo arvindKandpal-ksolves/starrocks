@@ -2124,74 +2124,47 @@ TEST_P(JsonPrettyTestFixture, json_pretty) {
         auto v_col = ColumnHelper::cast_to<TYPE_VARCHAR>(res_col);
         std::string actual = v_col->get_data()[0].to_string();
 
-        ASSERT_EQ(param.expected_output, actual)
-            << "Test Description: " << param.description
-            << "\nExpected:\n" << param.expected_output
-            << "\nActual:\n" << actual;
+        ASSERT_EQ(param.expected_output, actual) << "Test Description: " << param.description << "\nExpected:\n"
+                                                 << param.expected_output << "\nActual:\n"
+                                                 << actual;
     }
 }
 
-INSTANTIATE_TEST_SUITE_P(
-    JsonPrettyTest, JsonPrettyTestFixture,
-    ::testing::Values(
-        JsonPrettyTestParam{
-            R"({"a":1})",
-            R"({
+INSTANTIATE_TEST_SUITE_P(JsonPrettyTest, JsonPrettyTestFixture,
+                         ::testing::Values(JsonPrettyTestParam{R"({"a":1})",
+                                                               R"({
   "a" : 1
 })",
-            false,
-            "Simple object formatting (Space before colon)"
-        },
-        JsonPrettyTestParam{
-            R"([1,2])",
-            R"([
+                                                               false, "Simple object formatting (Space before colon)"},
+                                           JsonPrettyTestParam{R"([1,2])",
+                                                               R"([
   1,
   2
 ])",
-            false,
-            "Simple array formatting"
-        },
-        JsonPrettyTestParam{
-            R"({"b":3, "a":[1,2]})",
-            R"({
+                                                               false, "Simple array formatting"},
+                                           JsonPrettyTestParam{R"({"b":3, "a":[1,2]})",
+                                                               R"({
   "a" : [
     1,
     2
   ],
   "b" : 3
 })",
-            false,
-            "Nested structure formatting & Alphabetical sorting"
-        },
-        JsonPrettyTestParam{
-            R"({"key": "value with { braces }"})",
-            R"({
+                                                               false,
+                                                               "Nested structure formatting & Alphabetical sorting"},
+                                           JsonPrettyTestParam{R"({"key": "value with { braces }"})",
+                                                               R"({
   "key" : "value with { braces }"
 })",
-            false,
-            "Braces inside string value should be preserved"
-        },
-        JsonPrettyTestParam{
-            R"({})",
-            R"({
+                                                               false, "Braces inside string value should be preserved"},
+                                           JsonPrettyTestParam{R"({})",
+                                                               R"({
 })",
-            false,
-            "Empty object (Occupies lines)"
-        },
-        JsonPrettyTestParam{
-            R"([])",
-            R"([
+                                                               false, "Empty object (Occupies lines)"},
+                                           JsonPrettyTestParam{R"([])",
+                                                               R"([
 ])",
-            false,
-            "Empty array (Occupies lines)"
-        },
-        JsonPrettyTestParam{
-            "",
-            "",
-            true,
-            "Null input should return null"
-        }
-    )
-);
+                                                               false, "Empty array (Occupies lines)"},
+                                           JsonPrettyTestParam{"", "", true, "Null input should return null"}));
 
 } // namespace starrocks

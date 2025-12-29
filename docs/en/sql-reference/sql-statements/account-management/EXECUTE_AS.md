@@ -23,21 +23,27 @@ EXECUTE AS user WITH NO REVERT
 - The current login user (who calls the EXECUTE AS statement) must be granted the privilege to impersonate another user. For more information, see [GRANT](../account-management/GRANT.md).
 - The EXECUTE AS statement must contain the WITH NO REVERT clause, which means the execution context of the current session cannot be switched back to the original login user before the current session ends.
 
-## Examples
+### Examples
 
-Switch the execution context of the current session to the user `test2`.
+1. Create a user for testing.
 
-```SQL
-EXECUTE AS test2 WITH NO REVERT;
-```
+    ```sql
+    CREATE USER 'test_impersonate'@'%' IDENTIFIED BY '123456';
+    ```
 
-After the switch succeeds, you can run the `select current_user()` command to obtain the current user.
+2. Switch the execution context of the current session to the user `test_impersonate`.
 
-```SQL
-select current_user();
-+-----------------------------+
-| CURRENT_USER()              |
-+-----------------------------+
-| 'default_cluster:test2'@'%' |
-+-----------------------------+
-```
+    ```sql
+    EXECUTE AS 'test_impersonate' WITH NO REVERT;
+    ```
+
+3. After the switch succeeds, run `SELECT CURRENT_USER()` to confirm the identity change.
+
+    ```sql
+    SELECT CURRENT_USER();
+    +------------------------+
+    | CURRENT_USER()         |
+    +------------------------+
+    | 'test_impersonate'@'%' |
+    +------------------------+
+    ```
